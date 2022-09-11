@@ -36,7 +36,7 @@ class AsteroidAdapter : ListAdapter<Asteroid, AsteroidAdapter.ViewHolder>(Astero
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ListItemAsteroidBinding.inflate(layoutInflater, parent, false) as View
+                val binding = ListItemAsteroidBinding.inflate(layoutInflater, parent, false)
                 return ViewHolder(binding)
             }
         }
