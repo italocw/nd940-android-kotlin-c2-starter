@@ -15,16 +15,9 @@ class AsteroidAdapter : RecyclerView.Adapter<AsteroidAdapter.ViewHolder>() {
         }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //val asteroid = data[position]
+        val asteroid = data[position]
         val res = holder.itemView.context.resources
-        holder.codename.text = "(2015 XK351)"//asteroid.codename
-        holder.closeApproachDate.text = "2020-02-08"//asteroid.closeApproachDate
-        holder.isPotentiallyHazardous.setImageResource(
-            when (true) {
-                false -> R.drawable.ic_status_normal
-                true -> R.drawable.ic_status_potentially_hazardous
-            }
-        )
+        holder.bind(asteroid)
     }
 
 
@@ -41,5 +34,15 @@ class AsteroidAdapter : RecyclerView.Adapter<AsteroidAdapter.ViewHolder>() {
         val closeApproachDate: TextView = itemView.findViewById(R.id.close_approach_date_text)
         val isPotentiallyHazardous: ImageView =
             itemView.findViewById(R.id.is_potentially_hazardous_image)
+
+        fun bind(asteroid: Asteroid) {
+            codename.text = asteroid.codename
+            closeApproachDate.text = asteroid.closeApproachDate
+            isPotentiallyHazardous.setImageResource(
+                when (true) {
+                    false -> R.drawable.ic_status_normal
+                    true -> R.drawable.ic_status_potentially_hazardous
+                })
+        }
     }
 }
