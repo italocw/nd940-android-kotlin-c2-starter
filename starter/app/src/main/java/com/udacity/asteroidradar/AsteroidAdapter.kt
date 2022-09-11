@@ -5,17 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-class AsteroidAdapter : RecyclerView.Adapter<AsteroidAdapter.ViewHolder>() {
-    var data = listOf<Asteroid>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+class AsteroidAdapter : ListAdapter<Asteroid, AsteroidAdapter.ViewHolder>(AsteroidDiffCallback()) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val asteroid = data[position]
+        val asteroid = getItem(position)
         val res = holder.itemView.context.resources
         holder.bind(asteroid)
     }
@@ -25,7 +22,6 @@ class AsteroidAdapter : RecyclerView.Adapter<AsteroidAdapter.ViewHolder>() {
         return ViewHolder.from(parent)
     }
 
-    override fun getItemCount(): Int = data.size
 
     class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val codename: TextView = itemView.findViewById(R.id.codename_text)
@@ -51,5 +47,13 @@ class AsteroidAdapter : RecyclerView.Adapter<AsteroidAdapter.ViewHolder>() {
         }
     }
 
+ class AsteroidDiffCallback:DiffUtil.ItemCallback<Asteroid>(){
+     override fun areItemsTheSame(oldItem: Asteroid, newItem: Asteroid): Boolean {
+      return  oldItem.id==newItem.id
+     }
 
+     override fun areContentsTheSame(oldItem: Asteroid, newItem: Asteroid): Boolean {
+        return oldItem==newItem
+     }
+ }
 }
