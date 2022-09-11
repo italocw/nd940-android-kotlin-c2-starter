@@ -3,11 +3,10 @@ package com.udacity.asteroidradar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.udacity.asteroidradar.databinding.ListItemAsteroidBinding
 
 class AsteroidAdapter : ListAdapter<Asteroid, AsteroidAdapter.ViewHolder>(AsteroidDiffCallback()) {
 
@@ -23,26 +22,22 @@ class AsteroidAdapter : ListAdapter<Asteroid, AsteroidAdapter.ViewHolder>(Astero
     }
 
 
-    class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val codename: TextView = itemView.findViewById(R.id.codename_text)
-        val closeApproachDate: TextView = itemView.findViewById(R.id.close_approach_date_text)
-        val isPotentiallyHazardous: ImageView =
-            itemView.findViewById(R.id.is_potentially_hazardous_image)
-
+    class ViewHolder private constructor(val binding: ListItemAsteroidBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(asteroid: Asteroid) {
-            codename.text = asteroid.codename
-            closeApproachDate.text = asteroid.closeApproachDate
-            isPotentiallyHazardous.setImageResource(
+            binding.codenameText.text = asteroid.codename
+            binding.closeApproachDateText.text = asteroid.closeApproachDate
+            binding.isPotentiallyHazardousImage.setImageResource(
                 when (true) {
                     false -> R.drawable.ic_status_normal
                     true -> R.drawable.ic_status_potentially_hazardous
-                })
+                }
+            )
         }
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater.inflate(R.layout.list_item_asteroid, parent, false) as View
-                return ViewHolder(view)
+                val binding = ListItemAsteroidBinding.inflate(layoutInflater, parent, false) as View
+                return ViewHolder(binding)
             }
         }
     }
