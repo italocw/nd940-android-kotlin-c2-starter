@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="asteroid"
             type="com.udacity.asteroidradar.Asteroid" />
@@ -20,6 +21,7 @@
             android:layout_margin="@dimen/margin"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@color/default_text_color"
+            app:codename="@{asteroid}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Name" />
@@ -33,6 +35,7 @@
             android:layout_marginBottom="@dimen/margin"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textColor="@color/text_grey"
+            app:closeApproachDate="@{asteroid}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/codename_text"
@@ -44,6 +47,7 @@
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:layout_marginEnd="@dimen/margin"
+            app:isPotentiallyHazardousImage="@{asteroid}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

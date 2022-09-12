@@ -24,14 +24,8 @@ class AsteroidAdapter : ListAdapter<Asteroid, AsteroidAdapter.ViewHolder>(Astero
 
     class ViewHolder private constructor(val binding: ListItemAsteroidBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(asteroid: Asteroid) {
-            binding.codenameText.text = asteroid.codename
-            binding.closeApproachDateText.text = asteroid.closeApproachDate
-            binding.isPotentiallyHazardousImage.setImageResource(
-                when (true) {
-                    false -> R.drawable.ic_status_normal
-                    true -> R.drawable.ic_status_potentially_hazardous
-                }
-            )
+           binding.asteroid =asteroid
+            binding.executePendingBindings()
         }
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
