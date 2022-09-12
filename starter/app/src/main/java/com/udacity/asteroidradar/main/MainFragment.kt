@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.AsteroidAdapter
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
@@ -25,10 +26,17 @@ class MainFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        val adapter = AsteroidAdapter(AsteroidAdapter.AsteroidListener { asteroidId -> Toast.makeText(context,"clicado $asteroidId", Toast.LENGTH_LONG).show() })
+        val adapter = AsteroidAdapter(AsteroidAdapter.AsteroidListener { asteroid -> viewModel.onAsteroidClicked(asteroid) })
         binding.asteroidRecycler.adapter = adapter
-
+        viewModel.navigateToAsteroid.observe(viewLifecycleOwner, Observer {asteroid ->
+            asteroid?.let {
+                this.findNavController().navigate(MainFragmentDirections.actionShowDetail(asteroid))
+                viewModel.onAsteroidNavigated()
+            }
+        })
         viewModel.asteroids.observe(viewLifecycleOwner) { it?.let { adapter.submitList( it ) } }
+
+
 
         setHasOptionsMenu(true)
 
