@@ -34,7 +34,9 @@ class MainFragment : Fragment() {
                 viewModel.onAsteroidNavigated()
             }
         })
+
         viewModel.asteroids.observe(viewLifecycleOwner) { it?.let { adapter.submitList( it ) } }
+
 
 
 

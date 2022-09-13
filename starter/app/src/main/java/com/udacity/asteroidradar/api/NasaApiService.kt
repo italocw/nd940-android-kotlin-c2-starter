@@ -5,8 +5,8 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.Constants.API_KEY
 import com.udacity.asteroidradar.PictureOfDay
+import kotlinx.coroutines.Deferred
 import org.json.JSONObject
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
@@ -21,12 +21,12 @@ private val retrofit = Retrofit.Builder()
 
 interface NasaApiService {
     @GET("neo/rest/v1/feed?&api_key=$API_KEY")
-    fun getFeedWithNeosList():
-            Call<JSONObject>
+    suspend fun getFeedWithNeos():
+            JSONObject
 
     @GET("planetary/apod?api_key=$API_KEY")
-    fun getImageOfTheDay():
-            Call<PictureOfDay>
+    suspend fun getPictureOfDay():
+            PictureOfDay
 }
 
 object NasaApi {

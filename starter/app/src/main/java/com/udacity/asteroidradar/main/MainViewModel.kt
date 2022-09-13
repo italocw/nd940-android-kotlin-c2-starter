@@ -1,12 +1,15 @@
 package com.udacity.asteroidradar.main
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.NasaApi
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -18,17 +21,18 @@ class MainViewModel : ViewModel() {
     val navigateToAsteroid
         get() = _navigateToAsteroid
 
-    private val _imageOfTheDayResponse = MutableLiveData<PictureOfDay>()
-    val imageOfTheDayResponse: LiveData<PictureOfDay>
-        get() = _imageOfTheDayResponse
+    private val _pictureOfDay = MutableLiveData<PictureOfDay>()
+    val pictureOfDay: LiveData<PictureOfDay>
+        get() = _pictureOfDay
 
-    private val _neosResponse = MutableLiveData<List<Asteroid>>()
-    val neosResponse: LiveData<List<Asteroid>>
-        get() = _neosResponse
+    private val _asteroids =  MutableLiveData<List<Asteroid>>()
+    val asteroids: LiveData<List<Asteroid>>
+        get() = _asteroids
+
 
     init {
-        getImageOfTheDay()
-        getNeos()
+  //      getPictureOfDay()
+      //  getNeos()
     }
     fun onAsteroidClicked(asteroid: Asteroid) {
         _navigateToAsteroid.value = asteroid
@@ -38,36 +42,30 @@ class MainViewModel : ViewModel() {
         _navigateToAsteroid.value = null
     }
 
-    var asteroids = MutableLiveData<List<Asteroid>>()
 
     init {
-        asteroids.value = listOf()
+        getPictureOfDay()
+        _asteroids.value = listOf()
     }
 
-    private fun getImageOfTheDay() {
-        NasaApi.retrofitService.getImageOfTheDay().enqueue(object : Callback<PictureOfDay> {
-            override fun onResponse(call: Call<PictureOfDay>, response: Response<PictureOfDay>) {
-                _imageOfTheDayResponse.value = response.body()
-            }
+    private fun getPictureOfDay() {
+        viewModelScope.launch {
+            try{
+                _pictureOfDay.value =    NasaApi.retrofitService.getPictureOfDay()
 
-            override fun onFailure(call: Call<PictureOfDay>, t: Throwable) {
-                //_imageOfTheDayResponse.value = "Failure" + t.message
-            }
+            }catch (e: Exception) {
 
-        })
+            }
+        }
     }
 
     private fun getNeos() {
-        NasaApi.retrofitService.getFeedWithNeosList().enqueue(object : Callback<JSONObject> {
-            override fun onResponse(call: Call<JSONObject>, response: Response<JSONObject>) {
-                _neosResponse.value = parseAsteroidsJsonResult(response.body()!!)
+       /* viewModelScope.launch {
+            try {
+                val feedWithNeosResponse = NasaApi.retrofitService.getFeedWithNeos()
+                _asteroids.value = parseAsteroidsJsonResult(feedWithNeosResponse)
+            } catch (e: Exception) {
             }
-
-            override fun onFailure(call: Call<JSONObject>, t: Throwable) {
-             //   _neosResponse.value = "Failure" + t.message
-            }
-
-        })
+        }*/
     }
-
 }
