@@ -25,15 +25,11 @@ class MainViewModel : ViewModel() {
     val pictureOfDay: LiveData<PictureOfDay>
         get() = _pictureOfDay
 
-    private val _asteroids =  MutableLiveData<List<Asteroid>>()
+    private val _asteroids = MutableLiveData<List<Asteroid>>()
     val asteroids: LiveData<List<Asteroid>>
         get() = _asteroids
 
 
-    init {
-  //      getPictureOfDay()
-      //  getNeos()
-    }
     fun onAsteroidClicked(asteroid: Asteroid) {
         _navigateToAsteroid.value = asteroid
     }
@@ -44,28 +40,32 @@ class MainViewModel : ViewModel() {
 
 
     init {
+        getOnlineData()
+    }
+
+    private fun getOnlineData() {
         getPictureOfDay()
-        _asteroids.value = listOf()
+        getNeos()
     }
 
     private fun getPictureOfDay() {
         viewModelScope.launch {
-            try{
-                _pictureOfDay.value =    NasaApi.retrofitService.getPictureOfDay()
-
-            }catch (e: Exception) {
+            try {
+                _pictureOfDay.value = NasaApi.retrofitService.getPictureOfDay()
+            } catch (e: Exception) {
 
             }
         }
     }
 
     private fun getNeos() {
-       /* viewModelScope.launch {
+        viewModelScope.launch {
             try {
-                val feedWithNeosResponse = NasaApi.retrofitService.getFeedWithNeos()
-                _asteroids.value = parseAsteroidsJsonResult(feedWithNeosResponse)
+                val responseString = NasaApi.retrofitService.getFeedWithNeos()
+                _asteroids.value = parseAsteroidsJsonResult(JSONObject(responseString))
             } catch (e: Exception) {
             }
-        }*/
+        }
+
     }
 }
