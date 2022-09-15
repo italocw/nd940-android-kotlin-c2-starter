@@ -1,11 +1,11 @@
 package com.udacity.asteroidradar.main
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.AsteroidDatabase
+import com.udacity.asteroidradar.AsteroidDatabaseDao
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.NasaApi
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
@@ -15,8 +15,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
+import java.util.ArrayList
 
-class MainViewModel : ViewModel() {
+class MainViewModel(    val database: AsteroidDatabaseDao,
+    application: Application
+) : AndroidViewModel(application) {
 
     private val _navigateToAsteroid = MutableLiveData<Asteroid?>()
     val navigateToAsteroid
@@ -26,7 +29,7 @@ class MainViewModel : ViewModel() {
     val pictureOfDay: LiveData<PictureOfDay>
         get() = _pictureOfDay
 
-    private val _asteroids = MutableLiveData<List<Asteroid>>()
+    private val _asteroids = database.getTodayAsteroids()
     val asteroids: LiveData<List<Asteroid>>
         get() = _asteroids
 
@@ -41,8 +44,10 @@ class MainViewModel : ViewModel() {
 
 
     init {
+
         getOnlineData()
     }
+
 
     private fun getOnlineData() {
         getPictureOfDay()
@@ -56,6 +61,7 @@ class MainViewModel : ViewModel() {
                 if (returnedPictureOfDay.mediaType == "image") {
                     _pictureOfDay.value
                 }
+
             } catch (e: Exception) {
                 Timber.log(Log.ERROR, e.message)
             }
@@ -66,11 +72,18 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val responseString = NasaApi.retrofitService.getFeedWithNeos()
-                _asteroids.value = parseAsteroidsJsonResult(JSONObject(responseString))
+               val asteroids = parseAsteroidsJsonResult(JSONObject(responseString))
+
+                insertNeosOnDatabase(asteroids)
             } catch (e: Exception) {
                 Timber.log(Log.ERROR, e.message)
             }
         }
 
     }
+
+    private suspend fun insertNeosOnDatabase(asteroids: ArrayList<Asteroid>) {
+       asteroids.forEach {  database.insert(it) }
+    }
+
 }
