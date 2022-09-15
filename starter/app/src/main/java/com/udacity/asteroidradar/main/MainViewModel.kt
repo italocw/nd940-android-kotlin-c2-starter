@@ -59,7 +59,7 @@ class MainViewModel(    val database: AsteroidDatabaseDao,
             try {
                 val returnedPictureOfDay = NasaApi.retrofitService.getPictureOfDay()
                 if (returnedPictureOfDay.mediaType == "image") {
-                    _pictureOfDay.value
+                    _pictureOfDay.value = returnedPictureOfDay
                 }
 
             } catch (e: Exception) {

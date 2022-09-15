@@ -7,7 +7,7 @@ import androidx.room.Query
 
 @Dao
 interface AsteroidDatabaseDao {
-   @Query("SELECT * FROM asteroid_table ORDER BY close_approach_date DESC")
+   @Query("SELECT * FROM  asteroid_table where close_approach_date = date('now','localtime','start of day') ORDER BY close_approach_date DESC ")
     fun getTodayAsteroids(): LiveData<List<Asteroid>>
 
     @Insert
