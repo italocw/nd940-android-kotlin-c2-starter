@@ -14,6 +14,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 
 class MainViewModel : ViewModel() {
 
@@ -51,9 +52,12 @@ class MainViewModel : ViewModel() {
     private fun getPictureOfDay() {
         viewModelScope.launch {
             try {
-                _pictureOfDay.value = NasaApi.retrofitService.getPictureOfDay()
+                val returnedPictureOfDay = NasaApi.retrofitService.getPictureOfDay()
+                if (returnedPictureOfDay.mediaType == "image") {
+                    _pictureOfDay.value
+                }
             } catch (e: Exception) {
-
+                Timber.log(Log.ERROR, e.message)
             }
         }
     }
@@ -64,6 +68,7 @@ class MainViewModel : ViewModel() {
                 val responseString = NasaApi.retrofitService.getFeedWithNeos()
                 _asteroids.value = parseAsteroidsJsonResult(JSONObject(responseString))
             } catch (e: Exception) {
+                Timber.log(Log.ERROR, e.message)
             }
         }
 
