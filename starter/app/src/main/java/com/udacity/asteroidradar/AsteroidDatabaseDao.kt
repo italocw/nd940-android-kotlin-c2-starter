@@ -13,6 +13,6 @@ interface AsteroidDatabaseDao {
     @Insert
     suspend fun insert(asteroid: Asteroid)
 
-    @Query("DELETE * FROM  asteroid_table where close_approach_date = date('now','localtime','start of day', '-1 day') ")
-    suspend fun  deleteYesterdayAsteroids()
+ //   @Query("DELETE * FROM  asteroid_table where close_approach_date = date('now','localtime','start of day', '-1 day') ")
+   // suspend fun  deleteYesterdayAsteroids()
 }
