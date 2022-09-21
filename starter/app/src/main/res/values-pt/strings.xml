@@ -19,8 +19,9 @@
     <string name="potentially_hazardous_asteroid_icon">Ícone de asteróide potencialmente perigoso</string>
 
     <string name="image_of_the_day">Imagem do dia</string>
-    <string name="astronomica_unit_explanation">A unidade astronômica (au) é uma unidade de distância, aproximadamente a distância da Terra para o sol e equivalente a cerca de 150 milhões de quilômetros (93 milhões de milhas)</string>
+    <string name="astronomica_unit_explanation">A unidade astronômica (au) é uma unidade de distância, aproximadamente a distância da Terra para o sol e equivalente a cerca de 150 milhões de quilômetros (ou 93 milhões de milhas)</string>
     <string name="astronomical_unit_explanation_button">Definição de unidade astronômica</string>
     <string name="this_is_nasa_s_picture_of_day_showing_nothing_yet">Essa é a imagem do dia da NASA, mostrando nada, ainda</string>
     <string name="nasa_picture_of_day_content_description_format">Imagem do dia da NASA: %s</string>
+    <string name="close_explanation_text">Clique aqui para fechar o texto explicativo</string>
 </resources>
