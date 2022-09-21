@@ -12,6 +12,12 @@
     <string name="astronomical_unit_format">%f au</string>
     <string name="km_unit_format">%f km</string>
     <string name="km_s_unit_format">%f km/s</string>
+    <string name="potentially_hazardous_asteroid_image">Imagem de asteróide potencialmente perigoso</string>
+    <string name="not_hazardous_asteroid_image">Imagem de asteróide não-perigoso</string>
+
+    <string name="not_hazardous_asteroid_icon">Ícone de asteróide não perigoso</string>
+    <string name="potentially_hazardous_asteroid_icon">Ícone de asteróide potencialmente perigoso</string>
+
     <string name="image_of_the_day">Imagem do dia</string>
     <string name="astronomica_unit_explanation">A unidade astronônica (au) é uma unidade de distância, aproximadamente a distância da Terra para o sol e equivalente a cerca de 150 milhões de quilômetros (93 milhões de milhas)</string>
     <string name="astronomical_unit_explanation_button">Definição de unidade astronômica</string>
