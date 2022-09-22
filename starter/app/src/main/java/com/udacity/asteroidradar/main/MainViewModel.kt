@@ -33,14 +33,7 @@ class MainViewModel(
     private val asteroidsRepository = AsteroidsRepository(database)
 
     init {
-        refreshAsteroidsDatabase()
         getPictureOfDay()
-    }
-
-    private fun refreshAsteroidsDatabase() {
-        viewModelScope.launch {
-            asteroidsRepository.refreshAsteroids()
-        }
     }
 
     val asteroids = asteroidsRepository.todayAsteroids

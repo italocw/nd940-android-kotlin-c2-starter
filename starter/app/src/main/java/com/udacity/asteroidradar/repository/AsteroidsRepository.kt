@@ -24,7 +24,11 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
             val networkAsteroid =
                 parseAsteroidsJsonResult(JSONObject(NasaApi.retrofitService.getFeedWithNeos()))
             val networkAsteroidContainer = NetworkAsteroidContainer(networkAsteroid)
-            database.asteroidDatabaseDao.insertAll(*networkAsteroidContainer.asDatabaseModel())
+            val asteroidDatabaseDao = database.asteroidDatabaseDao
+
+            asteroidDatabaseDao.insertAll(*networkAsteroidContainer.asDatabaseModel())
+           asteroidDatabaseDao.deleteYesterdayAsteroids()
         }
     }
+
 }
