@@ -7,16 +7,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Asteroid
-import com.udacity.asteroidradar.AsteroidDatabaseDao
+import com.udacity.asteroidradar.AsteroidDao
+import com.udacity.asteroidradar.AsteroidsDatabase
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.NasaApi
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
+import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import timber.log.Timber
 
 
-class MainViewModel(    val database: AsteroidDatabaseDao,
+class MainViewModel(
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -28,10 +30,23 @@ class MainViewModel(    val database: AsteroidDatabaseDao,
     val pictureOfDay: LiveData<PictureOfDay>
         get() = _pictureOfDay
 
-    private val _asteroids = database.getTodayAsteroids()
-    val asteroids: LiveData<List<Asteroid>>
-        get() = _asteroids
 
+    private val database = AsteroidsDatabase.getInstance(application)
+
+    private val asteroidsRepository = AsteroidsRepository(database)
+
+    init {
+        refreshAsteroidsDatabase()
+        getPictureOfDay()
+    }
+
+    private fun refreshAsteroidsDatabase() {
+        viewModelScope.launch {
+            asteroidsRepository.refreshAsteroids()
+        }
+    }
+
+    val asteroids = asteroidsRepository.asteroids
 
     fun onAsteroidClicked(asteroid: Asteroid) {
         _navigateToAsteroid.value = asteroid
@@ -39,18 +54,6 @@ class MainViewModel(    val database: AsteroidDatabaseDao,
 
     fun onAsteroidNavigated() {
         _navigateToAsteroid.value = null
-    }
-
-
-    init {
-
-        getOnlineData()
-    }
-
-
-    private fun getOnlineData() {
-        getPictureOfDay()
-        getNeos()
     }
 
     private fun getPictureOfDay() {
@@ -67,22 +70,5 @@ class MainViewModel(    val database: AsteroidDatabaseDao,
         }
     }
 
-    private fun getNeos() {
-        viewModelScope.launch {
-            try {
-                val responseString = NasaApi.retrofitService.getFeedWithNeos()
-               val asteroids = parseAsteroidsJsonResult(JSONObject(responseString))
-
-                insertNeosOnDatabase(asteroids)
-            } catch (e: Exception) {
-                Timber.log(Log.ERROR, e.message)
-            }
-        }
-
-    }
-
-    private suspend fun insertNeosOnDatabase(asteroids: ArrayList<Asteroid>) {
-       asteroids.forEach {  database.insert(it) }
-    }
 
 }
