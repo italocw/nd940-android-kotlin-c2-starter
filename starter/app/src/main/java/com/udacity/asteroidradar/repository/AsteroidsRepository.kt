@@ -19,8 +19,8 @@ import java.util.*
 
 class AsteroidsRepository(private val database: AsteroidsDatabase) {
 
-    val todayAsteroids: LiveData<List<Asteroid>> =
-        Transformations.map(database.asteroidDatabaseDao.getTodayAsteroids()) {
+    val asteroids: LiveData<List<Asteroid>> =
+        Transformations.map(database.asteroidDatabaseDao.getAsteroids()) {
             it.asDomainModel()
         }
 
@@ -42,6 +42,11 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
             }
         }
     }
+    fun getede(){
+
+    }
+
+
 
     private fun getFormattedCurrentDateTime(): String {
         val isDatePattern = "yyyy-MM-dd"
