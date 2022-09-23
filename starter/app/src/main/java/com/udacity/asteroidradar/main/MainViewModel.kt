@@ -12,6 +12,7 @@ import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.NasaApi
 import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
+import retrofit2.Retrofit
 import timber.log.Timber
 
 
@@ -29,11 +30,17 @@ class MainViewModel(
 
 
     private val database = AsteroidsDatabase.getInstance(application)
-
     private val asteroidsRepository = AsteroidsRepository(database)
 
     init {
         getPictureOfDay()
+        refreshAsteroidData()
+    }
+
+    private fun refreshAsteroidData() {
+        viewModelScope.launch {
+            asteroidsRepository.refreshAsteroids()
+        }
     }
 
     val asteroids = asteroidsRepository.todayAsteroids
@@ -59,6 +66,4 @@ class MainViewModel(
             }
         }
     }
-
-
 }

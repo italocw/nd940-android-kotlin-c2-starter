@@ -22,14 +22,12 @@ class AsteroidRadarApplication : Application() {
     }
 
     private fun setupRecurringWork() {
-
         val constraints = getConstraints()
 
         val repeatingRequest =
             PeriodicWorkRequestBuilder<RefreshAsteroidDataWorker>(1, TimeUnit.DAYS)
                 .setConstraints(constraints)
                 .build()
-
 
         WorkManager.getInstance().enqueueUniquePeriodicWork(
             RefreshAsteroidDataWorker.WORK_NAME,
@@ -48,6 +46,7 @@ class AsteroidRadarApplication : Application() {
                     setRequiresDeviceIdle(true)
                 }
             }.build()
+
         return constraints
     }
 }
