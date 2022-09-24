@@ -5,7 +5,11 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs'
 apply plugin: 'kotlin-parcelize'
 
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
+
     compileSdkVersion 33
     defaultConfig {
         applicationId "com.udacity.asteroidradar"
@@ -16,6 +20,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            buildConfigField("String", "API_KEY", "\"" + localProperties['apiKey'] + "\"")
+       //     resValue("string", "nasa_api_key", localProperties['apiKey'])
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

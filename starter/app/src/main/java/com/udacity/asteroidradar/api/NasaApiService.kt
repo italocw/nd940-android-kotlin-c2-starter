@@ -2,9 +2,10 @@ package com.udacity.asteroidradar.api
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.udacity.asteroidradar.BuildConfig
 import com.udacity.asteroidradar.Constants
-import com.udacity.asteroidradar.Constants.API_KEY
 import com.udacity.asteroidradar.PictureOfDay
+import com.udacity.asteroidradar.R
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -28,7 +29,7 @@ private val retrofit = Retrofit.Builder()
                     .request()
                     .url()
                     .newBuilder()
-                    .addQueryParameter("api_key", API_KEY)
+                    .addQueryParameter("api_key", BuildConfig.API_KEY)
                     .build()
                 chain.proceed(chain.request().newBuilder().url(url).build())
             }.build()
@@ -47,6 +48,6 @@ interface NasaApiService {
 
 
 object NasaApi {
-    val retrofitService: NasaApiService by lazy { retrofit.create(NasaApiService::class.java) }
+       val retrofitService: NasaApiService by lazy { retrofit.create(NasaApiService::class.java) }
 
 }
