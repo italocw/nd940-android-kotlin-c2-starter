@@ -1,40 +1,33 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.AsteroidsDatabase
 import com.udacity.asteroidradar.PictureOfDay
-import com.udacity.asteroidradar.api.NasaApi
 import com.udacity.asteroidradar.api.isInternetAvailable
-import com.udacity.asteroidradar.repository.AsteroidsRepository
+import com.udacity.asteroidradar.repository.Repository
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 class MainViewModel(
     application: Application
 ) : AndroidViewModel(application) {
+    private val database = AsteroidsDatabase.getInstance(application)
+    private val repository = Repository(database)
 
     private val _navigateToAsteroid = MutableLiveData<Asteroid?>()
     val navigateToAsteroid
         get() = _navigateToAsteroid
 
-    private val _pictureOfDay = MutableLiveData<PictureOfDay>()
+    private val _pictureOfDay = repository.pictureOfDay
     val pictureOfDay: LiveData<PictureOfDay>
         get() = _pictureOfDay
 
 
-    private val database = AsteroidsDatabase.getInstance(application)
-    private val asteroidsRepository = AsteroidsRepository(database)
-
-    val asteroids = asteroidsRepository.asteroids
-    val todaysAsteroids = asteroidsRepository.todaysAsteroids
-    val nextSevenDaysAsteroids = asteroidsRepository.nextSevenDaysAsteroids
-
-
-    //  val selectedAsteroids = MutableLiveData<List<Asteroid>>()
+    val asteroids = repository.asteroids
+    val todaysAsteroids = repository.todaysAsteroids
+    val nextSevenDaysAsteroids = repository.nextSevenDaysAsteroids
 
 
     init {
@@ -42,11 +35,11 @@ class MainViewModel(
     }
 
     private fun fetchOnlineDataIfHasInternetConnection() {
-       viewModelScope.launch {
+        viewModelScope.launch {
             if (isInternetAvailable()) {
-                getPictureOfDay()
+                repository.fetchPictureOfDay()
                 if (todaysAsteroids.value.isNullOrEmpty()) {
-                    asteroidsRepository.refreshAsteroids()
+                    repository.refreshAsteroids()
                 }
             }
         }
@@ -58,19 +51,5 @@ class MainViewModel(
 
     fun onAsteroidNavigated() {
         _navigateToAsteroid.value = null
-    }
-
-    private fun getPictureOfDay() {
-        viewModelScope.launch {
-            try {
-                val returnedPictureOfDay = NasaApi.retrofitService.getPictureOfDay()
-                if (returnedPictureOfDay.mediaType == "image") {
-                    _pictureOfDay.value = returnedPictureOfDay
-                }
-
-            } catch (e: Exception) {
-                Timber.log(Log.ERROR, e.message)
-            }
-        }
     }
 }
