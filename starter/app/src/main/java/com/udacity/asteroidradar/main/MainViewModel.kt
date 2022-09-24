@@ -6,7 +6,6 @@ import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.AsteroidsDatabase
 import com.udacity.asteroidradar.PictureOfDay
-import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.api.NasaApi
 import com.udacity.asteroidradar.api.isInternetAvailable
 import com.udacity.asteroidradar.repository.AsteroidsRepository
@@ -39,20 +38,19 @@ class MainViewModel(
 
 
     init {
-        if (isInternetAvailable()) {
-            getPictureOfDay()
-            if (asteroids.value.isNullOrEmpty()) {
-                refreshAsteroidData()
+        fetchOnlineDataIfHasInternetConnection()
+    }
+
+    private fun fetchOnlineDataIfHasInternetConnection() {
+       viewModelScope.launch {
+            if (isInternetAvailable()) {
+                getPictureOfDay()
+                if (todaysAsteroids.value.isNullOrEmpty()) {
+                    asteroidsRepository.refreshAsteroids()
+                }
             }
         }
     }
-
-    private fun refreshAsteroidData() {
-        viewModelScope.launch {
-            asteroidsRepository.refreshAsteroids()
-        }
-    }
-
 
     fun onAsteroidClicked(asteroid: Asteroid) {
         _navigateToAsteroid.value = asteroid

@@ -3,6 +3,8 @@ package com.udacity.asteroidradar.api
 import android.util.Log
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.database.NetworkAsteroid
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import timber.log.Timber
 import java.net.InetAddress
@@ -62,11 +64,13 @@ private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
     return formattedDateList
 }
 
-fun isInternetAvailable(): Boolean {
-    return try {
-        val ipAddr: InetAddress = InetAddress.getByName(Constants.BASE_URL)
-        !ipAddr.equals("")
-    } catch (e: Exception) {
-        false
+suspend fun isInternetAvailable(): Boolean {
+    return withContext(Dispatchers.Default) {
+        try {
+            val ipAddr: InetAddress = InetAddress.getByName("google.com")
+            !ipAddr.equals("")
+        } catch (e: Exception) {
+            false
+        }
     }
 }
