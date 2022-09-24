@@ -2,11 +2,7 @@ package com.udacity.asteroidradar.main
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.AsteroidsDatabase
 import com.udacity.asteroidradar.PictureOfDay
@@ -14,7 +10,6 @@ import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.api.NasaApi
 import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
 import timber.log.Timber
 
 
@@ -35,12 +30,20 @@ class MainViewModel(
     private val asteroidsRepository = AsteroidsRepository(database)
 
     val asteroids = asteroidsRepository.asteroids
+    val todaysAsteroids = asteroidsRepository.todaysAsteroids
+    val nextSevenDaysAsteroids = asteroidsRepository.nextSevenDaysAsteroids
+
+
+
+    //  val selectedAsteroids = MutableLiveData<List<Asteroid>>()
+
 
     init {
         getPictureOfDay()
-        if (asteroids.value!!.isEmpty()) {
+        if (asteroids.value.isNullOrEmpty()) {
             refreshAsteroidData()
         }
+
     }
 
     private fun refreshAsteroidData() {
@@ -70,16 +73,5 @@ class MainViewModel(
                 Timber.log(Log.ERROR, e.message)
             }
         }
-    }
-
-    fun onMenuItemSelected(itemId: Int) {
-        when (itemId) {
-            R.id.show_all_menu -> {
-asteroidsRepository.todayAsteroids.
-            }
-            R.id.show_today_asteroids_menu -> {}
-
-            R.id.show_saved_asteroids_menu -> {}
         }
-    }
 }

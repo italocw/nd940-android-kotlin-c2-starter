@@ -24,6 +24,15 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
             it.asDomainModel()
         }
 
+    val todaysAsteroids: LiveData<List<Asteroid>> =
+        Transformations.map(database.asteroidDatabaseDao.getTodayAsteroids()) {
+            it.asDomainModel()
+        }
+    val nextSevenDaysAsteroids: LiveData<List<Asteroid>> =
+        Transformations.map(database.asteroidDatabaseDao.getNextSevenDaysTodayAsteroids()) {
+            it.asDomainModel()
+        }
+
     suspend fun refreshAsteroids() {
         val formattedCurrentDateTime = getFormattedCurrentDateTime()
         withContext(Dispatchers.IO) {
@@ -42,11 +51,6 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
             }
         }
     }
-    fun getede(){
-
-    }
-
-
 
     private fun getFormattedCurrentDateTime(): String {
         val isDatePattern = "yyyy-MM-dd"
@@ -54,5 +58,4 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
 
         return format.format(Calendar.getInstance().time)
     }
-
 }
