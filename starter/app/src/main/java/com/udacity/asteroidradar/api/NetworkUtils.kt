@@ -65,7 +65,7 @@ private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
 }
 
 suspend fun isInternetAvailable(): Boolean {
-    return withContext(Dispatchers.Default) {
+    return withContext(Dispatchers.IO) {
         try {
             val ipAddr: InetAddress = InetAddress.getByName("google.com")
             !ipAddr.equals("")
