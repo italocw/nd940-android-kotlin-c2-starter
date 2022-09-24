@@ -5,6 +5,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.Constants.API_KEY
 import com.udacity.asteroidradar.PictureOfDay
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -19,21 +20,27 @@ private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
-  //  .addConverterFactory(GsonConverterFactory.create())
-
     .addConverterFactory(MoshiConverterFactory.create(moshi))
-    .baseUrl(Constants.BASE_URL).build()
+    .baseUrl(Constants.BASE_URL).client(
+        OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val url = chain
+                    .request()
+                    .url()
+                    .newBuilder()
+                    .addQueryParameter("api_key", API_KEY)
+                    .build()
+                chain.proceed(chain.request().newBuilder().url(url).build())
+            }.build()
+    ).build()
 
 
 interface NasaApiService {
-    @GET("neo/rest/v1/feed?&api_key=$API_KEY")
-    suspend fun getFeedWithNeos(@Query("start_date") startDate:String):
+    @GET("neo/rest/v1/feed?")
+    suspend fun getFeedWithNeos(@Query("start_date") startDate: String):
             String
 
-
-   // suspend fun getFeedWithNeos(@Path("current-date") currentDate: String): String
-
-    @GET("planetary/apod?api_key=$API_KEY")
+    @GET("planetary/apod?")
     suspend fun getPictureOfDay():
             PictureOfDay
 }
