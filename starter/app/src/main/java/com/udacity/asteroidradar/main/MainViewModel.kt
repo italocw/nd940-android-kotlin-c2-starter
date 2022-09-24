@@ -8,6 +8,7 @@ import com.udacity.asteroidradar.AsteroidsDatabase
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.api.NasaApi
+import com.udacity.asteroidradar.api.isInternetAvailable
 import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -34,16 +35,16 @@ class MainViewModel(
     val nextSevenDaysAsteroids = asteroidsRepository.nextSevenDaysAsteroids
 
 
-
     //  val selectedAsteroids = MutableLiveData<List<Asteroid>>()
 
 
     init {
-        getPictureOfDay()
-        if (asteroids.value.isNullOrEmpty()) {
-            refreshAsteroidData()
+        if (isInternetAvailable()) {
+            getPictureOfDay()
+            if (asteroids.value.isNullOrEmpty()) {
+                refreshAsteroidData()
+            }
         }
-
     }
 
     private fun refreshAsteroidData() {
@@ -73,5 +74,5 @@ class MainViewModel(
                 Timber.log(Log.ERROR, e.message)
             }
         }
-        }
+    }
 }

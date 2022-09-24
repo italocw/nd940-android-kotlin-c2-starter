@@ -1,12 +1,13 @@
 package com.udacity.asteroidradar.api
 
-import com.udacity.asteroidradar.Asteroid
+import android.util.Log
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.database.NetworkAsteroid
 import org.json.JSONObject
+import timber.log.Timber
+import java.net.InetAddress
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<NetworkAsteroid> {
     val nearEarthObjectsJson = jsonResult.getJSONObject("near_earth_objects")
@@ -35,8 +36,10 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<NetworkAsteroid>
                 val isPotentiallyHazardous = asteroidJson
                     .getBoolean("is_potentially_hazardous_asteroid")
 
-                val asteroid = NetworkAsteroid(id, codename, formattedDate, absoluteMagnitude,
-                    estimatedDiameter, relativeVelocity, distanceFromEarth, isPotentiallyHazardous)
+                val asteroid = NetworkAsteroid(
+                    id, codename, formattedDate, absoluteMagnitude,
+                    estimatedDiameter, relativeVelocity, distanceFromEarth, isPotentiallyHazardous
+                )
                 asteroidList.add(asteroid)
             }
         }
@@ -57,4 +60,13 @@ private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
     }
 
     return formattedDateList
+}
+
+fun isInternetAvailable(): Boolean {
+    return try {
+        val ipAddr: InetAddress = InetAddress.getByName(Constants.BASE_URL)
+        !ipAddr.equals("")
+    } catch (e: Exception) {
+        false
+    }
 }
