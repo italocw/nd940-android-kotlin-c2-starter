@@ -29,11 +29,7 @@ class MainFragment : Fragment() {
         binding = FragmentMainBinding.inflate(inflater)
         binding.lifecycleOwner = this
 
-
-        val application = requireNotNull(this.activity).application
-        val viewModelFactory = MainViewModelFactory(application)
-
-        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         binding.viewModel = viewModel
 
