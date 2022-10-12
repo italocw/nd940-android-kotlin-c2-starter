@@ -29,7 +29,6 @@ class MainViewModel(
     val todaysAsteroids = repository.todaysAsteroids
     val nextSevenDaysAsteroids = repository.nextSevenDaysAsteroids
 
-
     init {
         fetchOnlineDataIfHasInternetConnection()
     }

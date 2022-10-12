@@ -52,30 +52,31 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val menuHost: MenuHost = requireActivity()
 
-
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-
                 menuInflater.inflate(R.menu.main_overflow_menu, menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                applyAsteroidFilter(menuItem)
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
 
-                when (menuItem.itemId) {
-                    R.id.show_weeks_asteroids_menu -> updateDisplayedAsteroids(viewModel.nextSevenDaysAsteroids)
-                    R.id.show_todays_asteroids_menu -> updateDisplayedAsteroids(viewModel.todaysAsteroids)
-                    R.id.show_saved_asteroids_menu -> updateDisplayedAsteroids(viewModel.asteroids)
-                }
-                    return true
-                }
-            }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    private fun applyAsteroidFilter(menuItem: MenuItem) {
+        when (menuItem.itemId) {
+            R.id.show_weeks_asteroids_menu -> updateDisplayedAsteroids(viewModel.nextSevenDaysAsteroids)
+            R.id.show_todays_asteroids_menu -> updateDisplayedAsteroids(viewModel.todaysAsteroids)
+            R.id.show_saved_asteroids_menu -> updateDisplayedAsteroids(viewModel.asteroids)
         }
+    }
+    private fun updateDisplayedAsteroids(asteroids: LiveData<List<Asteroid>>) {
 
-                private fun updateDisplayedAsteroids(asteroids: LiveData<List<Asteroid>>) {
-            asteroids.observe(viewLifecycleOwner) {
-                it?.let {
-                    asteroidListAdapter.submitList(it)
-                }
+        asteroids.observe(viewLifecycleOwner) {
+            it?.let {
+                asteroidListAdapter.submitList(it)
             }
         }
     }
+}

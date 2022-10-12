@@ -46,8 +46,6 @@ interface NasaApiService {
             PictureOfDay
 }
 
-
 object NasaApi {
        val retrofitService: NasaApiService by lazy { retrofit.create(NasaApiService::class.java) }
-
 }
