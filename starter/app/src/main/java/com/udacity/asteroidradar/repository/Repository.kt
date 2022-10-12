@@ -40,14 +40,16 @@ class Repository(private val database: AsteroidsDatabase) {
     val pictureOfDay = MutableLiveData<PictureOfDay>()
 
     suspend fun fetchPictureOfDay() {
-        try {
-            val returnedPictureOfDay = NasaApi.retrofitService.getPictureOfDay()
-            if (returnedPictureOfDay.mediaType == "image") {
-                pictureOfDay.value = returnedPictureOfDay
-            }
+        withContext(Dispatchers.IO) {
+            try {
+                val returnedPictureOfDay = NasaApi.retrofitService.getPictureOfDay()
+                if (returnedPictureOfDay.mediaType == "image") {
+                    pictureOfDay.value = returnedPictureOfDay
+                }
 
-        } catch (e: Exception) {
-            Timber.log(Log.ERROR, e.message)
+            } catch (e: Exception) {
+                Timber.log(Log.ERROR, e.message)
+            }
         }
     }
 
