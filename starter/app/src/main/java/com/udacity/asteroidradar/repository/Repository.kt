@@ -44,7 +44,7 @@ class Repository(private val database: AsteroidsDatabase) {
             try {
                 val returnedPictureOfDay = NasaApi.retrofitService.getPictureOfDay()
                 if (returnedPictureOfDay.mediaType == "image") {
-                    pictureOfDay.value = returnedPictureOfDay
+                    pictureOfDay.postValue(returnedPictureOfDay)
                 }
 
             } catch (e: Exception) {
